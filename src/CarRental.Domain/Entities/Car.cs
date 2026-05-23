@@ -15,7 +15,7 @@ public class Car
         decimal pricePerDay
     )
     {
-        if(Id == Guid.Empty)
+        if(id == Guid.Empty)
             throw new ArgumentException("Car id cannot be empty.");
 
         if(string.IsNullOrWhiteSpace(brand))
