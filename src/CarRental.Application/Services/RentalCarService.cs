@@ -1,7 +1,7 @@
 using CarRental.Application.Abstractions;
 using CarRental.Application.DTOs;
 using CarRental.Domain.Entities;
-using CarRental.Domain.Intefraces;
+using CarRental.Domain.Interfaces;
 
 namespace CarRental.Application.Services;
 
