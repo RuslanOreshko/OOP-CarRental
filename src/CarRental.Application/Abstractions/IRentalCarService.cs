@@ -5,5 +5,5 @@ namespace CarRental.Application.Abstractions;
 
 public interface IRentalCarService
 {
-    RentalCarRequest RentalCar(RentalCarRequest request);
+    RentalCarResponse RentalCar(RentalCarRequest request);
 }
