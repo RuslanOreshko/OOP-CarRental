@@ -1,6 +1,8 @@
+using CarRental.Domain.Interfaces;
+
 namespace CarRental.Domain.Entities;
 
-public class Car
+public class Car : IEntity<Guid>
 {
     public Guid Id { get; }
     public string Brand { get; }

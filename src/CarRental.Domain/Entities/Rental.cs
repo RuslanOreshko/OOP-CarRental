@@ -1,9 +1,8 @@
-using System.Security.Cryptography.X509Certificates;
-
+using CarRental.Domain.Interfaces;
 namespace CarRental.Domain.Entities;
 
 
-public class Rental
+public class Rental : IEntity<Guid>
 {
     public Guid Id { get; }
     public Car Car { get; } = default!;
