@@ -2,17 +2,11 @@
 using CarRental.Infrastructure.Repositories;
 using CarRental.Application.Services;
 using CarRental.Domain.Entities;
+using CarRental.Infrastructure.Seeds;
 
 var carRepository = new InMemoryCarRepository<Car, Guid>();
 
-carRepository.Add(
-    new Car(
-        Guid.NewGuid(),
-        "Toyota",
-        "Camry",
-        90
-    )
-);
+DataSeeder.SeedCars(carRepository);
 
 var rentalService = new RentalCarService(carRepository);
 
