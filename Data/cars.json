@@ -1,0 +1,23 @@
+[
+  {
+    "Id": "6b089f20-1036-4a8d-8b5d-7f19994bf6f5",
+    "Brand": "BMW",
+    "Model": "M5",
+    "PricePerDay": 120,
+    "IsAvaible": false
+  },
+  {
+    "Id": "825261ca-f669-4a2d-b00b-e723875d6e65",
+    "Brand": "Audi",
+    "Model": "A6",
+    "PricePerDay": 100,
+    "IsAvaible": true
+  },
+  {
+    "Id": "e9e1e21d-5463-45a9-8b4f-264bf3c2d2a9",
+    "Brand": "Toyota",
+    "Model": "Camry",
+    "PricePerDay": 80,
+    "IsAvaible": true
+  }
+]

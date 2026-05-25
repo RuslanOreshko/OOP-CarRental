@@ -3,17 +3,37 @@ using CarRental.Infrastructure.Repositories;
 using CarRental.Application.Services;
 using CarRental.Domain.Entities;
 using CarRental.Infrastructure.Seeds;
+using CarRental.Infrastructure.Persistences;
+using System.Runtime.CompilerServices;
 
 var carRepository = new InMemoryCarRepository<Car, Guid>();
 
-DataSeeder.SeedCars(carRepository);
+var jsonStore = new JsonDataStore<Car>("Data/cars.json");
 
 var rentalService = new RentalCarService(carRepository);
+
 
 Console.WriteLine("Car Rental System");
 Console.WriteLine();
 
-var cars = carRepository.GetAll().ToList();
+var cars = await jsonStore.LoadAsync();
+if(!cars.Any())
+{
+    DataSeeder.SeedCars(carRepository);
+
+    var carsInRepo = carRepository.GetAll().ToList();
+
+    await jsonStore.SaveAsync(carsInRepo);
+
+    cars = carsInRepo;
+}
+else
+{
+    foreach(var car in cars)
+    {
+        carRepository.Add(car);
+    }
+}
 
 Console.WriteLine("Available cars:");
 
@@ -53,6 +73,8 @@ var request = new RentalCarRequest
 try
 {
     var response = rentalService.RentalCar(request);
+
+    await jsonStore.SaveAsync(carRepository.GetAll().ToList());
 
     Console.WriteLine();
     Console.WriteLine(response.Message);
