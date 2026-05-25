@@ -7,9 +7,9 @@ namespace CarRental.Application.Services;
 
 public class RentalCarService : IRentalCarService
 {
-    private readonly ICarRepository _carRepository;
+    private readonly IRepository<Car, Guid> _carRepository;
 
-    public RentalCarService(ICarRepository carRepository)
+    public RentalCarService(IRepository<Car, Guid> carRepository)
     {
         _carRepository = carRepository;
     }

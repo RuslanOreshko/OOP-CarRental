@@ -1,8 +1,18 @@
 ﻿using CarRental.Application.DTOs;
 using CarRental.Infrastructure.Repositories;
 using CarRental.Application.Services;
+using CarRental.Domain.Entities;
 
-var carRepository = new InMemoryCarRepository();
+var carRepository = new InMemoryCarRepository<Car, Guid>();
+
+carRepository.Add(
+    new Car(
+        Guid.NewGuid(),
+        "Toyota",
+        "Camry",
+        90
+    )
+);
 
 var rentalService = new RentalCarService(carRepository);
 
