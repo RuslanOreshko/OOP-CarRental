@@ -1,9 +1,8 @@
-using System.Security.Cryptography.X509Certificates;
-
+using CarRental.Domain.Interfaces;
 namespace CarRental.Domain.Entities;
 
 
-public class Rental
+public class Rental : IEntity<Guid>
 {
     public Guid Id { get; }
     public Car Car { get; } = default!;
@@ -17,7 +16,8 @@ public class Rental
         Car car,
         Customer customer,
         DateTime stratDate,
-        int days
+        int days,
+        decimal totalPrice
     )
     {
         if(id == Guid.Empty)
@@ -37,6 +37,6 @@ public class Rental
         Customer = customer;
         StartDate = stratDate;
         Days = days;
-        TotalPrice = car.PricePerDay * days;
+        TotalPrice = totalPrice;
     }
 }

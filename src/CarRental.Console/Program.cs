@@ -1,61 +1,52 @@
-﻿using CarRental.Application.DTOs;
-using CarRental.Infrastructure.Repositories;
+﻿using CarRental.Infrastructure.Repositories;
 using CarRental.Application.Services;
+using CarRental.Domain.Entities;
+using CarRental.Infrastructure.Seeds;
+using CarRental.Infrastructure.Persistences;
+using CarRental.Application.Pricing;
+using CarRental.ConsoleUI.Menu;
 
-var carRepository = new InMemoryCarRepository();
+var carRepository = new InMemoryRepository<Car, Guid>();
+var rentalRepository = new InMemoryRepository<Rental, Guid>();
 
-var rentalService = new RentalCarService(carRepository);
+IPriceStrategy vipPriceStrategy = new VipPriceStrategy();
 
-Console.WriteLine("Car Rental System");
-Console.WriteLine();
+var rentalService = new RentalCarService
+(
+    carRepository, 
+    rentalRepository,
+    vipPriceStrategy
+);
 
-var cars = carRepository.GetAll().ToList();
 
-Console.WriteLine("Available cars:");
 
-foreach(var car in cars)
+var jsonStore = new JsonDataStore<Car>("Data/cars.json");
+
+var cars = await jsonStore.LoadAsync();
+
+if (!cars.Any())
 {
-    Console.WriteLine(
-        $"{car.Id} | {car.Brand} | {car.Model} | ${car.PricePerDay}/day | Available: {car.IsAvaible}"
-    );
+    DataSeeder.SeedCars(carRepository);
+
+    var seededCars = carRepository.GetAll().ToList();
+
+    await jsonStore.SaveAsync(seededCars);
+}
+else
+{
+    foreach(var car in cars)
+    {
+        carRepository.Add(car);
+    }
 }
 
-Console.WriteLine();
-Console.Write("Enter car id: ");
 
-var carIdInput = Console.ReadLine();
 
-if(!Guid.TryParse(carIdInput, out var carId))
-{
-    Console.WriteLine("Invalid car id.");
-    return;
-}
+var menu = new ConsoleMenu(
+    carRepository,
+    rentalRepository,
+    rentalService,
+    jsonStore
+);
 
-Console.Write("Enter rental days: ");
-
-if (!int.TryParse(Console.ReadLine(), out var days))
-{
-    Console.WriteLine("Invalid days.");
-    return;
-}
-
-var request = new RentalCarRequest
-{
-  CarId = carId,
-  CustomerId = Guid.NewGuid(),
-  Days = days
-};
-
-try
-{
-    var response = rentalService.RentalCar(request);
-
-    Console.WriteLine();
-    Console.WriteLine(response.Message);
-    Console.WriteLine($"Rental Id: {response.RentalId}");
-    Console.WriteLine($"Total Price: ${response.TotalPrice}");
-}
-catch (Exception ex)
-{
-   Console.WriteLine($"Error: {ex.Message}"); 
-}
+await menu.StartAsync();
