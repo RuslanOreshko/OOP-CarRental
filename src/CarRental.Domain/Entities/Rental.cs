@@ -16,7 +16,8 @@ public class Rental : IEntity<Guid>
         Car car,
         Customer customer,
         DateTime stratDate,
-        int days
+        int days,
+        decimal totalPrice
     )
     {
         if(id == Guid.Empty)
@@ -36,6 +37,6 @@ public class Rental : IEntity<Guid>
         Customer = customer;
         StartDate = stratDate;
         Days = days;
-        TotalPrice = car.PricePerDay * days;
+        TotalPrice = totalPrice;
     }
 }

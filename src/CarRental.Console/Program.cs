@@ -5,12 +5,14 @@ using CarRental.Domain.Entities;
 using CarRental.Infrastructure.Seeds;
 using CarRental.Infrastructure.Persistences;
 using CarRental.Application.Exstensions;
+using CarRental.Application.Pricing;
 
 var carRepository = new InMemoryCarRepository<Car, Guid>();
+var vipPriceStrategy = new VipPriceStrategy();
 
 var jsonStore = new JsonDataStore<Car>("Data/cars.json");
 
-var rentalService = new RentalCarService(carRepository);
+var rentalService = new RentalCarService(carRepository, vipPriceStrategy);
 
 
 Console.WriteLine("Car Rental System");
@@ -46,20 +48,20 @@ foreach(var car in cars.GeyByExpensiveCars())
 }
 
 
-Console.WriteLine("Car by brand");
-Console.Write("Enter brand: ");
+// Console.WriteLine("Car by brand");
+// Console.Write("Enter brand: ");
 
-var brandInput = Console.ReadLine();
+// var brandInput = Console.ReadLine();
 
-if (!string.IsNullOrWhiteSpace(brandInput))
-{
-    foreach(var car in cars.GetCarByBrand(brandInput))
-    {
-        Console.WriteLine(
-            $"{car.Id} | {car.Brand} | {car.Model} | ${car.PricePerDay}/day | Available: {car.IsAvaible}"
-        );
-    }
-}
+// if (!string.IsNullOrWhiteSpace(brandInput))
+// {
+//     foreach(var car in cars.GetCarByBrand(brandInput))
+//     {
+//         Console.WriteLine(
+//             $"{car.Id} | {car.Brand} | {car.Model} | ${car.PricePerDay}/day | Available: {car.IsAvaible}"
+//         );
+//     }
+// }
 
 
 

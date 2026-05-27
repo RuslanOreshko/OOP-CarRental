@@ -1,5 +1,6 @@
 using CarRental.Application.Abstractions;
 using CarRental.Application.DTOs;
+using CarRental.Application.Pricing;
 using CarRental.Domain.Entities;
 using CarRental.Domain.Interfaces;
 
@@ -8,10 +9,15 @@ namespace CarRental.Application.Services;
 public class RentalCarService : IRentalCarService
 {
     private readonly IRepository<Car, Guid> _carRepository;
+    private readonly IPriceStrategy _priceStrategy;
 
-    public RentalCarService(IRepository<Car, Guid> carRepository)
+    public RentalCarService(
+        IRepository<Car, Guid> carRepository,
+        IPriceStrategy priceStrategy
+        )
     {
         _carRepository = carRepository;
+        _priceStrategy = priceStrategy;
     }
 
     public RentalCarResponse RentalCar(RentalCarRequest request)
@@ -29,12 +35,15 @@ public class RentalCarService : IRentalCarService
             "test@gmail.com"
         );
 
+        var totalPrice = _priceStrategy.CalculatePrice(car, request.Days);
+
         var rental = new Rental(
             Guid.NewGuid(),
             car,
             customer,
             DateTime.UtcNow,
-            request.Days
+            request.Days,
+            totalPrice
         );
 
         _carRepository.Update(car);
