@@ -6,9 +6,19 @@ using CarRental.Infrastructure.Persistences;
 using CarRental.Application.Pricing;
 using CarRental.ConsoleUI.Menu;
 
-var carRepository = new InMemoryCarRepository<Car, Guid>();
+var carRepository = new InMemoryRepository<Car, Guid>();
+var rentalRepository = new InMemoryRepository<Rental, Guid>();
+
 IPriceStrategy vipPriceStrategy = new VipPriceStrategy();
-var rentalService = new RentalCarService(carRepository, vipPriceStrategy);
+
+var rentalService = new RentalCarService
+(
+    carRepository, 
+    rentalRepository,
+    vipPriceStrategy
+);
+
+
 
 var jsonStore = new JsonDataStore<Car>("Data/cars.json");
 
@@ -30,8 +40,11 @@ else
     }
 }
 
+
+
 var menu = new ConsoleMenu(
     carRepository,
+    rentalRepository,
     rentalService,
     jsonStore
 );

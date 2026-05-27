@@ -11,16 +11,19 @@ namespace CarRental.ConsoleUI.Menu;
 public class ConsoleMenu
 {
     private readonly IRepository<Car, Guid> _carRepository;
+    private readonly IRepository<Rental, Guid> _rentalRepository;
     private readonly IRentalCarService _rentalService;
     private readonly IDataStore<Car> _dataStore;
 
     public ConsoleMenu(
         IRepository<Car, Guid> carRepository,
+        IRepository<Rental, Guid> rentalRepository,
         RentalCarService rentalService,
         IDataStore<Car> dataStore
         )
     {
         _carRepository = carRepository;
+        _rentalRepository = rentalRepository;
         _rentalService = rentalService;
         _dataStore = dataStore;
     }
@@ -52,6 +55,10 @@ public class ConsoleMenu
                     break;
 
                 case "5":
+                    await ReturnCar();
+                    break;
+
+                case "6":
                     ShowAveragePrice();
                     break;
 
@@ -74,7 +81,8 @@ public class ConsoleMenu
         Console.WriteLine("2. View Available Cars");
         Console.WriteLine("3. Search Cars By Brand");
         Console.WriteLine("4. Rent Car");
-        Console.WriteLine("5. Show Average Price");
+        Console.WriteLine("5. Return Car");
+        Console.WriteLine("6. Show Average Price");
         Console.WriteLine("0. Exit");
 
         Console.Write("Choose option: ");
@@ -163,6 +171,42 @@ public class ConsoleMenu
             Console.WriteLine(response.Message);
             Console.WriteLine(
                 $"Total price: ${response.TotalPrice}");
+
+            Console.WriteLine($"Rentall id: {response.RentalId}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    public async Task ReturnCar()
+    {
+        Console.Write("Enter rental id: ");
+
+        var rentalIdInput = Console.ReadLine();
+
+        if (!Guid.TryParse(rentalIdInput, out var rentalId))
+        {
+            Console.WriteLine("Invalid id.");
+            return;
+        }
+
+        var request = new ReturnCarRequest
+        {
+            RentalId = rentalId
+        };
+
+        try
+        {
+            var response = 
+                _rentalService.ReturnCar(request);
+
+            await _dataStore.SaveAsync(
+                _carRepository.GetAll().ToList()
+            );
+
+            Console.WriteLine(response.Message);
         }
         catch (Exception ex)
         {

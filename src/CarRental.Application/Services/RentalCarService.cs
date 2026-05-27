@@ -9,14 +9,17 @@ namespace CarRental.Application.Services;
 public class RentalCarService : IRentalCarService
 {
     private readonly IRepository<Car, Guid> _carRepository;
+    private readonly IRepository<Rental, Guid> _rentalRepository;
     private readonly IPriceStrategy _priceStrategy;
 
     public RentalCarService(
         IRepository<Car, Guid> carRepository,
+        IRepository<Rental, Guid> rentalRepository,
         IPriceStrategy priceStrategy
         )
     {
         _carRepository = carRepository;
+        _rentalRepository = rentalRepository;
         _priceStrategy = priceStrategy;
     }
 
@@ -48,10 +51,29 @@ public class RentalCarService : IRentalCarService
 
         _carRepository.Update(car);
 
+        _rentalRepository.Add(rental);
+
         return new RentalCarResponse{
             RentalId = rental.Id,
             TotalPrice = rental.TotalPrice,
             Message = "Car rented successfully"
+        };
+    }
+
+    public ReturnCarResponse ReturnCar(
+        ReturnCarRequest request
+    )
+    {
+        var rental = _rentalRepository.GetById(request.RentalId);
+
+        if(rental == null)
+            throw new InvalidOperationException("Rental not found.");
+
+        rental.Car.Return();
+
+        return new ReturnCarResponse
+        {
+            Message = "Car return successfully"
         };
     }
 }
