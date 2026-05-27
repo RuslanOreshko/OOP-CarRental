@@ -3,6 +3,11 @@
 ```mermaid
 classDiagram
 
+class IEntity~TId~ {
+    <<interface>>
+    +TId Id
+}
+
 class Car {
     +Guid Id
     +string Brand
@@ -26,32 +31,102 @@ class Rental {
     +decimal TotalPrice
 }
 
-class Payment {
-    +Guid Id
-    +decimal Amount
-    +DateTime PaymentDate
-}
-
-class ICarRepository {
+class IRepository~T,TId~ {
     <<interface>>
-    +GetById(Guid id)
+    +GetById(TId id)
     +GetAll()
-    +Update(Car car)
+    +Add(T entity)
+    +Update(T entity)
+    +Delete(TId id)
 }
 
-class InMemoryCarRepository {
-    -List~Car~ cars
+class InMemoryRepository~T,TId~ {
+    -List~T~ items
 }
 
-class RentalService {
-    +RentCar(Guid carId, Guid customerId, int days)
-    +ReturnCar(Guid rentalId)
+class IDataStore~T~ {
+    <<interface>>
+    +SaveAsync()
+    +LoadAsync()
 }
+
+class JsonDataStore~T~ {
+    -string filePath
+}
+
+class IRentalCarService {
+    <<interface>>
+    +RentCar(RentalCarRequest request)
+    +ReturnCar(ReturnCarRequest request)
+}
+
+class RentalCarService {
+    -IRepository~Car,Guid~ carRepository
+    -IRepository~Rental,Guid~ rentalRepository
+    -IPriceStrategy priceStrategy
+}
+
+class RentalCarRequest {
+    +Guid CarId
+    +Guid CustomerId
+    +int Days
+}
+
+class RentalCarResponse {
+    +Guid RentalId
+    +decimal TotalPrice
+    +string Message
+}
+
+class ReturnCarRequest {
+    +Guid RentalId
+}
+
+class ReturnCarResponse {
+    +string Message
+}
+
+class IPriceStrategy {
+    <<interface>>
+    +CalculatePrice(Car car, int rentalDays)
+}
+
+class StandardPriceStrategy {
+}
+
+class VipPriceStrategy {
+}
+
+class CarExtensions {
+    <<static>>
+    +GetAvailableCars()
+    +GetCarsByBrand()
+    +GetMostExpensiveCars()
+    +GetAveragePrice()
+}
+
+IEntity~TId~ <|.. Car
+IEntity~TId~ <|.. Customer
+IEntity~TId~ <|.. Rental
+
+IRepository~T,TId~ <|.. InMemoryRepository~T,TId~
+
+IDataStore~T~ <|.. JsonDataStore~T~
+
+IRentalCarService <|.. RentalCarService
+
+IPriceStrategy <|.. StandardPriceStrategy
+IPriceStrategy <|.. VipPriceStrategy
 
 Rental --> Car
 Rental --> Customer
-Rental --> Payment
 
-RentalService --> ICarRepository
-InMemoryCarRepository ..|> ICarRepository
+RentalCarService --> IRepository~Car,Guid~
+RentalCarService --> IRepository~Rental,Guid~
+RentalCarService --> IPriceStrategy
+
+RentalCarService --> RentalCarRequest
+RentalCarService --> RentalCarResponse
+RentalCarService --> ReturnCarRequest
+RentalCarService --> ReturnCarResponse
 ```
