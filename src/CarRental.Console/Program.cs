@@ -4,7 +4,7 @@ using CarRental.Application.Services;
 using CarRental.Domain.Entities;
 using CarRental.Infrastructure.Seeds;
 using CarRental.Infrastructure.Persistences;
-using System.Runtime.CompilerServices;
+using CarRental.Application.Exstensions;
 
 var carRepository = new InMemoryCarRepository<Car, Guid>();
 
@@ -35,14 +35,33 @@ else
     }
 }
 
+
 Console.WriteLine("Available cars:");
 
-foreach(var car in cars)
+foreach(var car in cars.GeyByExpensiveCars())
 {
     Console.WriteLine(
         $"{car.Id} | {car.Brand} | {car.Model} | ${car.PricePerDay}/day | Available: {car.IsAvaible}"
     );
 }
+
+
+Console.WriteLine("Car by brand");
+Console.Write("Enter brand: ");
+
+var brandInput = Console.ReadLine();
+
+if (!string.IsNullOrWhiteSpace(brandInput))
+{
+    foreach(var car in cars.GetCarByBrand(brandInput))
+    {
+        Console.WriteLine(
+            $"{car.Id} | {car.Brand} | {car.Model} | ${car.PricePerDay}/day | Available: {car.IsAvaible}"
+        );
+    }
+}
+
+
 
 Console.WriteLine();
 Console.Write("Enter car id: ");

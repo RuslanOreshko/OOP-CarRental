@@ -30,5 +30,12 @@ public class DataSeeder
                 "Toyota",
                 "Camry",
                 80));
+
+        repository.Add(
+            new Car(
+                Guid.NewGuid(),
+                "Toyota",
+                "Hylux",
+                110));
     }
 }
