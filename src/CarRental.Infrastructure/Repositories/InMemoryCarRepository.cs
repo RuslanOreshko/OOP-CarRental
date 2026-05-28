@@ -1,49 +1,38 @@
-using CarRental.Domain.Entities;
 using CarRental.Domain.Interfaces;
 
 namespace CarRental.Infrastructure.Repositories;
 
-public class InMemoryCarRepository : ICarRepository
+public class InMemoryRepository<T, TId> : IRepository<T, TId> where T : IEntity<TId>
 {
-    private readonly List<Car> _cars = new();
+    private readonly List<T> _items = new();
 
-    public InMemoryCarRepository()
+    public IReadOnlyCollection<T> GetAll()
     {
-        _cars.Add(new Car(
-            Guid.NewGuid(),
-            "BMW",
-            "M5",
-            120));
-
-        _cars.Add(new Car(
-            Guid.NewGuid(),
-            "Audi",
-            "A6",
-            100));
-
-        _cars.Add(new Car(
-            Guid.NewGuid(),
-            "Toyota",
-            "Camry",
-            80));
+        return _items;
     }
 
-    public void Add(Car car)
+    public T? GetById(TId id)
     {
-        _cars.Add(car);
+        return _items.FirstOrDefault(x => x.Id!.Equals(id));
     }
 
-    public IEnumerable<Car> GetAll()
+    public void Add(T entity)
     {
-        return _cars;
+        _items.Add(entity);
     }
 
-    public Car? GetById(Guid id)
+    public void Update(T entity)
     {
-        return _cars.FirstOrDefault(c => c.Id == id);
+        
     }
 
-    public void Update(Car car)
+    public void Remove(TId id)
     {
+        var entity = GetById(id);
+
+        if(entity != null)
+        {
+            _items.Remove(entity);
+        }
     }
 }
