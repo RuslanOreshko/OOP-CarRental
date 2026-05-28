@@ -1,23 +1,30 @@
 [
   {
-    "Id": "6b089f20-1036-4a8d-8b5d-7f19994bf6f5",
+    "Id": "4bf466a0-f6ff-4878-95a3-fcc98c222975",
     "Brand": "BMW",
     "Model": "M5",
     "PricePerDay": 120,
-    "IsAvaible": false
+    "IsAvaible": true
   },
   {
-    "Id": "825261ca-f669-4a2d-b00b-e723875d6e65",
+    "Id": "60cee476-fa4a-4330-a7bb-98da6dec9ed8",
     "Brand": "Audi",
     "Model": "A6",
     "PricePerDay": 100,
-    "IsAvaible": true
+    "IsAvaible": false
   },
   {
-    "Id": "e9e1e21d-5463-45a9-8b4f-264bf3c2d2a9",
+    "Id": "fa74df88-12f4-4bde-852f-63142001f707",
     "Brand": "Toyota",
     "Model": "Camry",
     "PricePerDay": 80,
-    "IsAvaible": true
+    "IsAvaible": false
+  },
+  {
+    "Id": "860ffcaf-fafc-4001-ba5d-241a46b6b554",
+    "Brand": "Toyota",
+    "Model": "Hylux",
+    "PricePerDay": 110,
+    "IsAvaible": false
   }
 ]
