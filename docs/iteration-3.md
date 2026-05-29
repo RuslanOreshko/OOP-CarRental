@@ -56,6 +56,8 @@ At least 8 integration tests implemented.
 
 Coverage collected using Coverlet.
 
+![alt text](../Images/image.png)
+
 ### Remaining Risks
 
 - Rental persistence is currently in-memory only.
