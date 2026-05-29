@@ -498,3 +498,8 @@ coverage/
 coverage.cobertura.xml
 
 *.log
+
+
+coverage-report/
+coverage.opencover.xml
+TestResults/
