@@ -32,11 +32,7 @@ public class RentalCarService : IRentalCarService
 
         car.Rent();
 
-        var customer = new Customer(
-            request.CustomerId,
-            "Test customer",
-            "test@gmail.com"
-        );
+        var customer = CreateCustomer(request.CustomerId);
 
         var totalPrice = _priceStrategy.CalculatePrice(car, request.Days);
 
@@ -75,5 +71,14 @@ public class RentalCarService : IRentalCarService
         {
             Message = "Car return successfully"
         };
+    }
+
+    private Customer CreateCustomer(Guid customerId)
+    {
+        return new Customer(
+            customerId,
+            "Test Customer",
+            "test@gmail.com"
+        );
     }
 }

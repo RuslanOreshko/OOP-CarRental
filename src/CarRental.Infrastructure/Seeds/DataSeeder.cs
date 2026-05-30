@@ -1,6 +1,5 @@
 using CarRental.Domain.Entities;
 using CarRental.Domain.Interfaces;
-using Microsoft.Win32.SafeHandles;
 
 namespace CarRental.Infrastructure.Seeds;
 
