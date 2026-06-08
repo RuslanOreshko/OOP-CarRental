@@ -2,6 +2,7 @@ using CarRental.Application.DTOs;
 using CarRental.Application.Pricing;
 using CarRental.Application.Services;
 using CarRental.Domain.Entities;
+using CarRental.Infrastructure.Persistences;
 using CarRental.Infrastructure.Repositories;
 
 namespace CarRental.Application.Tests.Services;
@@ -133,5 +134,18 @@ public class RentalCarServiceTests
 
 
         Assert.True(car.IsAvaible);
+    }
+
+    [Fact]
+    public async Task LoadAsync_Should_Return_Empty_When_File_Not_Exists()
+    {
+        var store =
+            new JsonDataStore<Car>(
+                "not-exists.json");
+
+        var result =
+            await store.LoadAsync();
+
+        Assert.Empty(result);
     }
 }
